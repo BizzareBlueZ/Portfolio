@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Jeba Shajida</title>
+<meta name="description" content="Jeba Shajida — CSE student at IUT. Projects, writing, and general cloud-thinking." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ---------------------------------------------------
+   Tokens
+--------------------------------------------------- */
+:root {
+  --bg: #F7F5EF;
+  --bg-raised: #FCFBF7;
+  --sage-pale: #E1E8DA;
+  --sage-mid: #8FA888;
+  --sage-deep: #4F6350;
+  --ink: #2B2E27;
+  --ink-soft: #5B5F56;
+  --line: #D9D6CB;
+  --accent: #4F6350;
+
+  --font-display: "Fraunces", serif;
+  --font-body: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --max: 720px;
+  --transition: 200ms ease;
+}
+
+[data-theme="dark"] {
+  --bg: #191D18;
+  --bg-raised: #1F241E;
+  --sage-pale: #2B3428;
+  --sage-mid: #7C9A76;
+  --sage-deep: #A8C49E;
+  --ink: #EDEBE2;
+  --ink-soft: #B7B8AC;
+  --line: #333A30;
+  --accent: #A8C49E;
+}
+
+* { box-sizing: border-box; }
+
+/* Cursor icon — glowing pastel magenta infinity symbol */
+:root {
+  --cursor-icon:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='34' height='22' viewBox='0 0 34 22'><defs><filter id='glow' x='-50%25' y='-50%25' width='200%25' height='200%25'><feGaussianBlur stdDeviation='1.6' result='blur'/><feMerge><feMergeNode in='blur'/><feMergeNode in='SourceGraphic'/></feMerge></filter></defs><path d='M9 5.5C5.4 5.5 3 8 3 11s2.4 5.5 6 5.5c2.6 0 4.4-1.6 6-3.5M25 16.5c3.6 0 6-2.5 6-5.5s-2.4-5.5-6-5.5c-2.6 0-4.4 1.6-6 3.5M9 5.5c2.6 0 4.4 1.6 6 3.5M25 16.5c-2.6 0-4.4-1.6-6-3.5' fill='none' stroke='%23D6469C' stroke-width='2.6' stroke-linecap='round' filter='url(%23glow)'/></svg>")
+    17 11, pointer;
+}
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation: none !important; transition: none !important; }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+  transition: background var(--transition), color var(--transition);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* extended transition window while the sky sweep plays, so the palette
+   change feels like part of the sunset/sunrise rather than an instant cut */
+body.theme-transitioning,
+body.theme-transitioning * {
+  transition-duration: 900ms !important;
+  transition-timing-function: ease !important;
+}
+
+/* ---------------------------------------------------
+   Sky sweep — plays across the whole page on theme change
+--------------------------------------------------- */
+.sky-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-100%);
+}
+.sky-overlay.to-dark {
+  animation: duskSweep 1200ms cubic-bezier(.4,0,.2,1) forwards;
+  background: linear-gradient(
+    to bottom,
+    #191D18 0%,
+    #2B3428 30%,
+    #4F6350 58%,
+    #8FA888 82%,
+    transparent 100%
+  );
+}
+.sky-overlay.to-light {
+  animation: dawnSweep 1200ms cubic-bezier(.4,0,.2,1) forwards;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #8FA888 18%,
+    #C7D4BE 42%,
+    #E1E8DA 68%,
+    #F7F5EF 100%
+  );
+}
+@keyframes duskSweep {
+  0%   { transform: translateY(-100%); opacity: .95; }
+  50%  { transform: translateY(0%);    opacity: .95; }
+  100% { transform: translateY(100%);  opacity: 0; }
+}
+@keyframes dawnSweep {
+  0%   { transform: translateY(100%);  opacity: .95; }
+  50%  { transform: translateY(0%);    opacity: .95; }
+  100% { transform: translateY(-100%); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sky-overlay.to-dark, .sky-overlay.to-light { animation: none; opacity: 0; }
+  body.theme-transitioning, body.theme-transitioning * { transition-duration: var(--transition) !important; }
+}
+
+h1, h2, h3 { font-family: var(--font-display); font-weight: 500; margin: 0; color: var(--ink); }
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
+
+.leaf-icon {
+  width: 15px; height: 15px;
+  fill: none;
+  stroke: var(--sage-deep);
+  stroke-width: 1.3;
+  vertical-align: middle;
+  margin-right: 6px;
+  opacity: .75;
+}
+.leaf-icon use { fill: var(--sage-mid); stroke: var(--sage-deep); }
+
+/* ---------------------------------------------------
+   Theme toggle
+--------------------------------------------------- */
+.theme-toggle {
+  position: fixed;
+  top: 22px; right: 26px;
+  z-index: 50;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--bg-raised);
+  color: var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  cursor: var(--cursor-icon);
+  transition: background var(--transition), border-color var(--transition), transform 150ms ease;
+  overflow: visible;
+}
+.theme-toggle:hover { transform: scale(1.08); border-color: var(--sage-mid); }
+.theme-toggle .icon {
+  width: 22px; height: 22px;
+  position: absolute;
+  transition: opacity 400ms ease, transform 400ms ease;
+}
+.toggle-halo {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--sage-mid) 35%, transparent) 0%, transparent 70%);
+  opacity: .6;
+  transition: opacity var(--transition);
+}
+.icon-sun {
+  opacity: 1;
+  transform: translateY(0) rotate(0deg) scale(1);
+  color: var(--sage-deep);
+  transition: opacity 550ms ease, transform 550ms ease;
+}
+.icon-moon {
+  opacity: 0;
+  transform: translateY(16px) rotate(-18deg) scale(0.45);
+  color: var(--sage-deep);
+  transition: opacity 550ms ease, transform 550ms ease;
+}
+[data-theme="dark"] .icon-sun {
+  opacity: 0;
+  transform: translateY(16px) rotate(18deg) scale(0.45);
+}
+[data-theme="dark"] .icon-moon {
+  opacity: 1;
+  transform: translateY(0) rotate(0deg) scale(1);
+  color: #EDEBE2;
+}
+.star { opacity: 0; transform-origin: center; }
+[data-theme="dark"] .star-1 { animation: twinkle 2.6s ease-in-out .2s infinite; }
+[data-theme="dark"] .star-2 { animation: twinkle 2.6s ease-in-out .8s infinite; }
+[data-theme="dark"] .star-3 { animation: twinkle 2.6s ease-in-out 1.4s infinite; }
+@keyframes twinkle {
+  0%, 100% { opacity: 0; transform: scale(0.6); }
+  50% { opacity: 1; transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .star { animation: none !important; opacity: .7; }
+}
+
+/* ---------------------------------------------------
+   Dot navigation (calm, no scroll-jack, just a map)
+--------------------------------------------------- */
+.dotnav {
+  position: fixed;
+  right: 26px; top: 50%;
+  transform: translateY(-50%);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.dotnav a {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--line);
+  position: relative;
+  transition: background var(--transition), transform 150ms ease;
+  cursor: var(--cursor-icon);
+}
+.dotnav a:hover, .dotnav a:focus-visible { background: var(--sage-mid); transform: scale(1.3); }
+.dotnav a::after {
+  content: attr(data-label);
+  position: absolute;
+  right: 18px; top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease;
+}
+.dotnav a:hover::after { opacity: 1; }
+@media (max-width: 720px) { .dotnav { display: none; } }
+
+/* ---------------------------------------------------
+   Sections
+--------------------------------------------------- */
+.section {
+  padding: 96px 0;
+  border-bottom: 1px solid var(--line);
+}
+.section:last-child { border-bottom: none; }
+
+.hero {
+  min-height: 92vh;
+  display: flex;
+  align-items: center;
+}
+.contact-section { min-height: 60vh; }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--sage-deep);
+  text-transform: lowercase;
+  letter-spacing: .02em;
+  margin: 0 0 18px;
+  display: flex; align-items: center;
+}
+
+h1 {
+  font-size: clamp(48px, 9vw, 88px);
+  line-height: 1;
+  margin-bottom: 20px;
+  letter-spacing: -0.01em;
+}
+
+.hero-sub {
+  font-size: 19px;
+  color: var(--ink-soft);
+  max-width: 480px;
+  margin: 0 0 34px;
+}
+.hero-wink {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--sage-deep);
+  opacity: .8;
+}
+
+.hero-links { display: flex; gap: 14px; flex-wrap: wrap; }
+
+.hero-contact {
+  margin-top: 26px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.hero-contact-link {
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color var(--transition), border-color var(--transition);
+}
+.hero-contact-link:hover { color: var(--sage-deep); border-color: var(--sage-mid); }
+.hero-contact-sep { opacity: .4; }
+@media (max-width: 480px) { .hero-contact-sep { display: none; } .hero-contact { flex-direction: column; align-items: flex-start; gap: 4px; } }
+
+.btn {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 12px 20px;
+  border-radius: 999px;
+  text-decoration: none;
+  border: 1px solid var(--sage-deep);
+  transition: background var(--transition), color var(--transition), transform 150ms ease;
+  cursor: var(--cursor-icon);
+}
+.btn-primary { background: var(--sage-deep); color: var(--bg); }
+.btn-primary:hover { transform: translateY(-2px); }
+.btn-ghost { color: var(--ink); }
+.btn-ghost:hover { background: var(--sage-pale); }
+
+h2 {
+  font-size: clamp(28px, 4vw, 38px);
+  margin-bottom: 26px;
+  display: flex; align-items: center;
+}
+
+.lead {
+  font-size: 19px;
+  color: var(--ink);
+  max-width: 560px;
+  margin: 0 0 16px;
+}
+p { color: var(--ink-soft); max-width: 620px; }
+em { color: var(--sage-deep); font-style: italic; }
+
+.section-note {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  opacity: .7;
+  margin: -12px 0 30px;
+}
+
+/* ---------------------------------------------------
+   Project cards
+--------------------------------------------------- */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+.card {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 26px;
+  transition: border-color var(--transition), transform 150ms ease;
+  cursor: var(--cursor-icon);
+}
+.card:hover { border-color: var(--sage-mid); transform: translateY(-3px); }
+.tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--sage-deep);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin: 0 0 10px;
+}
+.card h3 { font-size: 20px; margin-bottom: 10px; }
+.card p { font-size: 14.5px; margin-bottom: 16px; }
+.card-links { display: flex; gap: 14px; }
+.card-link {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--sage-mid);
+  padding-bottom: 1px;
+  cursor: var(--cursor-icon);
+}
+.card-link:hover { color: var(--sage-deep); }
+
+/* ---------------------------------------------------
+   Game trigger — a little button covered in melon stickers
+--------------------------------------------------- */
+.game-trigger {
+  position: fixed;
+  top: 22px; right: 80px;
+  z-index: 50;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--bg-raised);
+  color: var(--sage-deep);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: .04em;
+  display: flex; align-items: center; justify-content: center;
+  cursor: var(--cursor-icon);
+  transition: transform 180ms ease, border-color var(--transition);
+}
+.game-trigger:hover { transform: scale(1.08) rotate(-3deg); border-color: var(--sage-mid); }
+.game-trigger-label { pointer-events: none; }
+.game-trigger .sticker {
+  position: absolute;
+  font-size: 15px;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,.15));
+  pointer-events: none;
+  line-height: 1;
+}
+.sticker-1 { top: -7px; left: -6px; transform: rotate(-18deg); }
+.sticker-2 { bottom: -6px; right: -7px; transform: rotate(14deg); font-size: 13px; }
+.sticker-3 { top: 2px; right: -10px; transform: rotate(24deg); font-size: 11px; }
+
+@media (max-width: 480px) {
+  .game-trigger { right: 74px; width: 48px; height: 48px; font-size: 9px; }
+}
+
+/* ---------------------------------------------------
+   Fullscreen game — plays directly over the blurred site
+--------------------------------------------------- */
+.game-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 14px;
+  background: color-mix(in srgb, var(--bg) 22%, transparent);
+  backdrop-filter: blur(3px) saturate(1.1);
+  -webkit-backdrop-filter: blur(3px) saturate(1.1);
+}
+.game-fullscreen.hidden { display: none; }
+
+.game-close {
+  position: absolute;
+  top: 20px; right: 24px;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--bg-raised);
+  color: var(--ink);
+  font-size: 20px;
+  line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  cursor: var(--cursor-icon);
+  transition: transform 150ms ease, border-color var(--transition);
+}
+.game-close:hover { transform: scale(1.08); border-color: var(--sage-mid); }
+
+.game-hint {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin: 0;
+  text-align: center;
+}
+
+.game-frame {
+  position: relative;
+  width: min(92vw, 440px);
+  height: min(78vh, 620px);
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: var(--cursor-icon);
+}
+#gameCanvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.game-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: color-mix(in srgb, var(--bg) 30%, transparent);
+  backdrop-filter: blur(2px);
+  text-align: center;
+  padding: 20px;
+  transition: opacity 200ms ease;
+}
+.game-overlay.hidden { opacity: 0; pointer-events: none; }
+.game-overlay-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--ink);
+  margin: 0;
+  text-shadow: 0 1px 12px var(--bg);
+}
+.game-overlay-sub {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin: -8px 0 0;
+}
+
+/* ---------------------------------------------------
+   Arts — empty placeholder gallery
+--------------------------------------------------- */
+.art-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 20px;
+}
+.art-slot {
+  aspect-ratio: 1 / 1;
+  border: 1px dashed var(--line);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-soft);
+  opacity: .6;
+  cursor: var(--cursor-icon);
+  transition: border-color var(--transition), opacity var(--transition);
+}
+.art-slot:hover { border-color: var(--sage-mid); opacity: .9; }
+
+/* ---------------------------------------------------
+   Interests
+--------------------------------------------------- */
+.interest-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 28px;
+}
+.interest h3 { font-size: 17px; margin-bottom: 8px; color: var(--sage-deep); }
+.interest p { font-size: 14.5px; }
+
+/* ---------------------------------------------------
+   Academics — intentionally small
+--------------------------------------------------- */
+.section-small { padding: 48px 0; }
+.h-small { font-size: 15px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); margin-bottom: 18px; }
+.h-small .leaf-icon { width: 12px; height: 12px; }
+.edu-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.edu-list li { display: flex; flex-direction: column; font-size: 13px; }
+.edu-main { color: var(--ink-soft); }
+.edu-meta { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-soft); opacity: .65; }
+
+/* ---------------------------------------------------
+   Contact
+--------------------------------------------------- */
+.contact-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 26px 0 40px;
+}
+.contact-link {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  color: var(--ink);
+  text-decoration: none;
+  width: fit-content;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--transition), color var(--transition);
+  cursor: var(--cursor-icon);
+}
+.contact-link:hover { border-color: var(--sage-mid); color: var(--sage-deep); }
+.footer-note {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  opacity: .55;
+}
+
+/* ---------------------------------------------------
+   Reveal-on-scroll: gentle, no bounce, no slide-fling
+   (kept deliberately subtle — motion sickness note in the hero is a real constraint here)
+--------------------------------------------------- */
+.section .wrap {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 500ms ease, transform 500ms ease;
+}
+.section.is-visible .wrap {
+  opacity: 1;
+  transform: translateY(0);
+}
+.hero .wrap { opacity: 1; transform: none; } /* hero shows immediately */
+
+</style>
+
+<body>
+
+<div id="skyOverlay" class="sky-overlay" aria-hidden="true"></div>
+
+<!-- little sage leaf, used as a recurring marker instead of numbers -->
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="leaf" viewBox="0 0 24 24">
+    <path d="M12 2C7 4 4 9 4 14c0 4 3.5 7 8 7 1 0 2-3 2-7 0-6-1-10-2-12z" />
+    <path d="M6 13c3-1 6-1 8 1" stroke-width="1" fill="none" />
+  </symbol>
+</svg>
+
+<button id="gameTriggerBtn" class="game-trigger" aria-label="Play the watermelon game">
+  <span class="sticker sticker-1">🍉</span>
+  <span class="sticker sticker-2">🍉</span>
+  <span class="sticker sticker-3">🍉</span>
+  <span class="game-trigger-label">play</span>
+</button>
+
+<button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+  <span class="toggle-halo"></span>
+  <svg class="icon icon-sun" viewBox="0 0 32 32" fill="none">
+    <circle cx="16" cy="16" r="6.2" fill="currentColor"/>
+    <g stroke="currentColor" stroke-width="1.3" stroke-linecap="round">
+      <line x1="16" y1="2.5" x2="16" y2="6.2"/>
+      <line x1="16" y1="25.8" x2="16" y2="29.5"/>
+      <line x1="2.5" y1="16" x2="6.2" y2="16"/>
+      <line x1="25.8" y1="16" x2="29.5" y2="16"/>
+      <line x1="6.3" y1="6.3" x2="8.7" y2="8.7"/>
+      <line x1="23.3" y1="23.3" x2="25.7" y2="25.7"/>
+      <line x1="25.7" y1="6.3" x2="23.3" y2="8.7"/>
+      <line x1="8.7" y1="23.3" x2="6.3" y2="25.7"/>
+    </g>
+  </svg>
+  <svg class="icon icon-moon" viewBox="0 0 32 32" fill="none">
+    <path d="M21.5 5.5c-6.2.4-11 5.6-11 11.9 0 6.6 5.4 12 12 12 3.4 0 6.5-1.4 8.6-3.8-1.1.3-2.3.5-3.6.5-6.6 0-12-5.4-12-12 0-3.4 1.4-6.5 3.7-8.6-.2 0 .1 0 .3 0z" fill="currentColor"/>
+    <g fill="currentColor">
+      <path class="star star-1" d="M8 8l.6 1.6L10 10l-1.4.6L8 12.2l-.6-1.6L6 10l1.4-.6z"/>
+      <circle class="star star-2" cx="6" cy="20" r="0.9"/>
+      <circle class="star star-3" cx="11" cy="24" r="0.6"/>
+    </g>
+  </svg>
+</button>
+
+<nav class="dotnav" aria-label="Section navigation">
+  <a href="#hero" data-label="hello"></a>
+  <a href="#about" data-label="about"></a>
+  <a href="#projects" data-label="projects"></a>
+  <a href="#arts" data-label="arts"></a>
+  <a href="#interests" data-label="elsewhere"></a>
+  <a href="#academics" data-label="school"></a>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <section id="hero" class="section hero">
+    <div class="wrap">
+      <p class="eyebrow"><svg class="leaf-icon"><use href="#leaf"/></svg> some places are empty to make place for something else </p>
+      <h1>Jeba Shajida</h1>
+      <p class="hero-sub">CSE student — trying to get a grip on this journey, but I've motion sickness. <span class="hero-wink">(this site doesn't move much)</span></p>
+      <div class="hero-links">
+        <a href="#projects" class="btn btn-primary">see what I've built</a>
+      </div>
+      <div class="hero-contact">
+        <a href="MAILTO:jebashajida11@gmail.com" class="hero-contact-link">[ Mail: jebashajida11@gmail.com ]</a>
+        <span class="hero-contact-sep">·</span>
+        <a href="https://github.com/BizzareBlueZ" class="hero-contact-link">[ Github ]</a>
+        <span class="hero-contact-sep">·</span>
+        <a href="http://www.linkedin.com/in/jeba-shajida-149b87327" class="hero-contact-link">[ LinkedIn ]</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="section">
+    <div class="wrap">
+      <h2><svg class="leaf-icon"><use href="#leaf"/></svg> about</h2>
+      <p class="lead">I'm a CSE student at IUT, interested in programming, software development, and learning how things work.</p>
+      <p>I also enjoy drawing, journaling, and thinking about ideas outside of my coursework.</p>
+      <p>I used to draw a lot, drifted into digital art at some point, and still come back to it when I need to make something that isn't graded.</p>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" class="section">
+    <div class="wrap">
+      <h2><svg class="leaf-icon"><use href="#leaf"/></svg> projects</h2>
+      <p class="section-note">things I've built along the way.</p>
+      <div class="card-grid">
+
+        <article class="card">
+          <p class="tag">[ C++ / Qt / CMake ]</p>
+          <h3>ShareSphere</h3>
+          <p>A campus item-sharing platform for lending and borrowing textbooks, lab equipment, and everyday essentials, with authentication, listings, borrow requests, waitlists, and both Qt GUI and console interfaces.</p>
+          <div class="card-links">
+            <a href="https://github.com/BizzareBlueZ/ShareSphere" class="card-link" target="_blank" rel="noopener">repo →</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <p class="tag">[ C / CSE 4108 ]</p>
+          <h3>UnWind</h3>
+          <p>A collection of three games developed mainly in C for Structured Programming Lab 2.</p>
+          <div class="card-links">
+            <a href="https://github.com/BizzareBlueZ/UnWind" class="card-link" target="_blank" rel="noopener">repo →</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ARTS -->
+  <section id="arts" class="section">
+    <div class="wrap">
+      <h2><svg class="leaf-icon"><use href="#leaf"/></svg> arts</h2>
+      <p class="section-note">empty for now...</p>
+    </div>
+  </section>
+
+  <!-- INTERESTS / WRITING -->
+  <section id="interests" class="section">
+    <div class="wrap">
+      <h2><svg class="leaf-icon"><use href="#leaf"/></svg> elsewhere</h2>
+      <p class="section-note">things that aren't coursework but are still, in some sense, me.</p>
+      <div class="interest-grid">
+        <div class="interest">
+          <h3>journaling</h3>
+          <p>Mostly private, occasionally public. Placeholder — link a blog or a favorite entry, if you're brave.</p>
+        </div>
+        <div class="interest">
+          <h3>thinking about existence</h3>
+          <p>Long, unhurried, cloud-shaped thoughts on religion and meaning. Placeholder — maybe an essay lives here eventually.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACADEMICS (deliberately small) -->
+  <section id="academics" class="section section-small">
+    <div class="wrap">
+      <h2 class="h-small"><svg class="leaf-icon"><use href="#leaf"/></svg> education</h2>
+      <ul class="edu-list">
+        <li>
+          <span class="edu-main">B.Sc. in Computer Science &amp; Engineering — Islamic University of Technology (IUT)</span>
+          <span class="edu-meta">Gazipur, Bangladesh · 2024–2028</span>
+        </li>
+        <li>
+          <span class="edu-main">HSC &amp; SSC — Viqarunnisa Noon School &amp; College</span>
+          <span class="edu-meta">Bailey Road, Dhaka</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<div id="gameFullscreen" class="game-fullscreen hidden" aria-hidden="true">
+  <button id="gameCloseBtn" class="game-close" aria-label="Close game">×</button>
+  <p class="game-hint">move the platform · arrows, mouse, or drag</p>
+  <div class="game-frame">
+    <canvas id="gameCanvas"></canvas>
+    <div class="game-overlay" id="gameOverlay">
+      <p class="game-overlay-title">catch the watermelon</p>
+      <button class="btn btn-primary" id="gameStartBtn">start</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script src="game.js"></script>
+</body>
+<script src="script.js"></script>
+<script src="game.js"></script>
+<script src="script.js"></script>
+<script src="game.js"></script>
+<script src="script.js"></script>
+<script src="game.js"></script>
+<script>
+// Theme toggle — persists choice, defaults to system preference.
+// Switching plays a brief sunset/sunrise sky-sweep across the page,
+// and the sun/moon icon in the button sets/rises to match.
+(function () {
+  const root = document.documentElement;
+  const toggle = document.getElementById("themeToggle");
+  const overlay = document.getElementById("skyOverlay");
+  const stored = localStorage.getItem("theme");
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const initial = stored || (prefersDark ? "dark" : "light");
+  root.setAttribute("data-theme", initial);
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  toggle.addEventListener("click", () => {
+    const current = root.getAttribute("data-theme");
+    const next = current === "dark" ? "light" : "dark";
+
+    if (reduceMotion) {
+      root.setAttribute("data-theme", next);
+      localStorage.setItem("theme", next);
+      return;
+    }
+
+    document.body.classList.add("theme-transitioning");
+    overlay.classList.remove("to-dark", "to-light");
+    void overlay.offsetWidth; // restart animation
+    overlay.classList.add(next === "dark" ? "to-dark" : "to-light");
+
+    // flip the palette right as the sweep fully covers the screen,
+    // so the change reads as caused by the dusk/dawn, not a separate event
+    window.setTimeout(() => {
+      root.setAttribute("data-theme", next);
+      localStorage.setItem("theme", next);
+    }, 420);
+
+    window.setTimeout(() => {
+      overlay.classList.remove("to-dark", "to-light");
+      document.body.classList.remove("theme-transitioning");
+    }, 1200);
+  });
+})();
+
+// Gentle reveal — sections fade up slightly when scrolled into view.
+// Deliberately understated: no bounce, no staggered fling, respects reduced-motion.
+(function () {
+  const sections = document.querySelectorAll(".section");
+  if (!("IntersectionObserver" in window)) {
+    sections.forEach((s) => s.classList.add("is-visible"));
+    return;
+  }
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          io.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15 }
+  );
+  sections.forEach((s) => io.observe(s));
+})();
+
+// Dot-nav: highlight the current section as you scroll
+(function () {
+  const links = document.querySelectorAll(".dotnav a");
+  const map = new Map();
+  links.forEach((a) => {
+    const id = a.getAttribute("href").slice(1);
+    const el = document.getElementById(id);
+    if (el) map.set(el, a);
+  });
+  if (!("IntersectionObserver" in window) || map.size === 0) return;
+
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const link = map.get(entry.target);
+        if (!link) return;
+        if (entry.isIntersecting) {
+          links.forEach((l) => l.removeAttribute("aria-current"));
+          link.setAttribute("aria-current", "true");
+        }
+      });
+    },
+    { threshold: 0.5 }
+  );
+  map.forEach((_, el) => io.observe(el));
+})();
+
+</script>
+<script>
+(function () {
+  const canvas = document.getElementById("gameCanvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const frame = canvas.closest(".game-frame");
+  const overlay = document.getElementById("gameOverlay");
+  const startBtn = document.getElementById("gameStartBtn");
+  const fullscreen = document.getElementById("gameFullscreen");
+  const triggerBtn = document.getElementById("gameTriggerBtn");
+  const closeBtn = document.getElementById("gameCloseBtn");
+
+  let dpr = Math.min(window.devicePixelRatio || 1, 2);
+  let W = 0, H = 0; // CSS pixel dimensions
+
+  function resize() {
+    const rect = frame.getBoundingClientRect();
+    W = rect.width;
+    H = rect.height;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    paddle.y = H - 34;
+    paddle.w = Math.max(64, W * 0.22);
+  }
+
+  const paddle = { x: 0, y: 0, w: 90, h: 14, targetX: 0 };
+  let melon = null;
+  let score = 0;
+  let lives = 3;
+  let running = false;
+  let rafId = null;
+  let lastTime = 0;
+
+  function spawnMelon() {
+    const speed = 180 + Math.min(score * 12, 320); // px/sec, ramps up (2x pace)
+    melon = {
+      x: 24 + Math.random() * (W - 48),
+      y: -24,
+      r: 16,
+      vy: speed,
+    };
+  }
+
+  function reset() {
+    score = 0;
+    lives = 3;
+    paddle.x = W / 2 - paddle.w / 2;
+    paddle.targetX = paddle.x;
+    spawnMelon();
+  }
+
+  function drawBackgroundLine() {
+    ctx.strokeStyle = getVar("--line");
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, H - 4);
+    ctx.lineTo(W, H - 4);
+    ctx.stroke();
+  }
+
+  function getVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  function drawPaddle() {
+    const r = paddle.h / 2;
+    ctx.fillStyle = getVar("--sage-deep");
+    roundRect(ctx, paddle.x, paddle.y, paddle.w, paddle.h, r);
+    ctx.fill();
+  }
+
+  function roundRect(c, x, y, w, h, r) {
+    c.beginPath();
+    c.moveTo(x + r, y);
+    c.arcTo(x + w, y, x + w, y + h, r);
+    c.arcTo(x + w, y + h, x, y + h, r);
+    c.arcTo(x, y + h, x, y, r);
+    c.arcTo(x, y, x + w, y, r);
+    c.closePath();
+  }
+
+  function drawMelon() {
+    if (!melon) return;
+    ctx.font = `${melon.r * 2.1}px serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("🍉", melon.x, melon.y);
+  }
+
+  function drawHUD() {
+    ctx.font = "600 15px 'JetBrains Mono', monospace";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "top";
+    ctx.shadowColor = getVar("--bg");
+    ctx.shadowBlur = 8;
+    ctx.fillStyle = getVar("--ink");
+    ctx.fillText("🍉", 14, 14);
+    ctx.fillText(String(score), 40, 16);
+
+    // lives, small dots top right of canvas
+    ctx.textAlign = "right";
+    for (let i = 0; i < 3; i++) {
+      ctx.fillStyle = i < lives ? getVar("--sage-mid") : getVar("--line");
+      ctx.beginPath();
+      ctx.arc(W - 14 - i * 16, 20, 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.shadowBlur = 0;
+  }
+
+  function update(dt) {
+    if (!melon) return;
+    melon.y += melon.vy * dt;
+
+    // paddle eases toward target for smooth control
+    paddle.x += (paddle.targetX - paddle.x) * Math.min(1, dt * 12);
+    paddle.x = Math.max(0, Math.min(W - paddle.w, paddle.x));
+
+    const paddleTop = paddle.y;
+    const hitX = melon.x > paddle.x - melon.r * 0.4 && melon.x < paddle.x + paddle.w + melon.r * 0.4;
+    if (melon.y + melon.r >= paddleTop && melon.y < paddleTop + paddle.h && hitX) {
+      score += 1;
+      spawnMelon();
+      return;
+    }
+
+    if (melon.y - melon.r > H) {
+      lives -= 1;
+      if (lives <= 0) {
+        endGame();
+        return;
+      }
+      spawnMelon();
+    }
+  }
+
+  function render() {
+    ctx.clearRect(0, 0, W, H);
+    drawBackgroundLine();
+    drawPaddle();
+    drawMelon();
+    drawHUD();
+  }
+
+  function loop(t) {
+    if (!running) return;
+    const dt = Math.min(0.033, (t - lastTime) / 1000 || 0);
+    lastTime = t;
+    update(dt);
+    render();
+    rafId = requestAnimationFrame(loop);
+  }
+
+  function startGame() {
+    reset();
+    running = true;
+    overlay.classList.add("hidden");
+    lastTime = performance.now();
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(loop);
+  }
+
+  function endGame() {
+    running = false;
+    cancelAnimationFrame(rafId);
+    overlay.classList.remove("hidden");
+    overlay.innerHTML = `
+      <p class="game-overlay-title">final score: ${score} 🍉</p>
+      <p class="game-overlay-sub">the watermelon has fallen. it happens to the best of us.</p>
+      <button class="btn btn-primary" id="gameStartBtn">try again</button>
+    `;
+    document.getElementById("gameStartBtn").addEventListener("click", startGame);
+  }
+
+  // --- controls ---
+  function setPaddleFromClientX(clientX) {
+    const rect = canvas.getBoundingClientRect();
+    const x = clientX - rect.left;
+    paddle.targetX = Math.max(0, Math.min(W - paddle.w, x - paddle.w / 2));
+  }
+
+  canvas.addEventListener("mousemove", (e) => setPaddleFromClientX(e.clientX));
+  canvas.addEventListener(
+    "touchmove",
+    (e) => {
+      if (e.touches[0]) setPaddleFromClientX(e.touches[0].clientX);
+      e.preventDefault();
+    },
+    { passive: false }
+  );
+  canvas.addEventListener(
+    "touchstart",
+    (e) => {
+      if (e.touches[0]) setPaddleFromClientX(e.touches[0].clientX);
+    },
+    { passive: true }
+  );
+
+  const keys = {};
+  window.addEventListener("keydown", (e) => {
+    if (["ArrowLeft", "ArrowRight"].includes(e.key)) keys[e.key] = true;
+  });
+  window.addEventListener("keyup", (e) => {
+    if (["ArrowLeft", "ArrowRight"].includes(e.key)) keys[e.key] = false;
+  });
+  setInterval(() => {
+    if (!running) return;
+    const step = W * 0.02;
+    if (keys.ArrowLeft) paddle.targetX = Math.max(0, paddle.targetX - step);
+    if (keys.ArrowRight) paddle.targetX = Math.min(W - paddle.w, paddle.targetX + step);
+  }, 16);
+
+  startBtn.addEventListener("click", startGame);
+  window.addEventListener("resize", resize);
+
+  // --- open / close the fullscreen game ---
+  function openGame() {
+    fullscreen.classList.remove("hidden");
+    fullscreen.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    resize();
+    render();
+  }
+  function closeGame() {
+    running = false;
+    cancelAnimationFrame(rafId);
+    fullscreen.classList.add("hidden");
+    fullscreen.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    overlay.classList.remove("hidden");
+    overlay.innerHTML = `
+      <p class="game-overlay-title">catch the watermelon</p>
+      <button class="btn btn-primary" id="gameStartBtn">start</button>
+    `;
+    document.getElementById("gameStartBtn").addEventListener("click", startGame);
+  }
+
+  triggerBtn.addEventListener("click", openGame);
+  closeBtn.addEventListener("click", closeGame);
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !fullscreen.classList.contains("hidden")) closeGame();
+  });
+
+  resize();
+  render();
+})();
+
+</script>
+</html>
